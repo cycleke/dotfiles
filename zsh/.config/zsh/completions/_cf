@@ -1,0 +1,304 @@
+#compdef cf
+
+_message_next_arg()
+{
+    argcount=0
+    for word in "${words[@][2,-1]}"
+    do
+        if [[ $word != -* ]] ; then
+            ((argcount++))
+        fi
+    done
+    if [[ $argcount -le ${#myargs[@]} ]] ; then
+        _message -r $myargs[$argcount]
+        if [[ $myargs[$argcount] =~ ".*file.*" || $myargs[$argcount] =~ ".*path.*" ]] ; then
+            _files
+        fi
+    fi
+}
+
+_cf ()
+{
+    local context state state_descr line
+    typeset -A opt_args
+
+    _arguments -C \
+        ':command:->command' \
+        '*::options:->options'
+
+    case $state in
+        (command)
+            local -a subcommands
+            subcommands=(
+				'config'
+				'submit'
+				'list'
+				'parse'
+				'gen'
+				'test'
+				'watch'
+				'open'
+				'stand'
+				'sid'
+				'race'
+				'pull'
+				'clone'
+				'upgrade'
+            )
+            _values 'cf' $subcommands
+        ;;
+
+        (options)
+            case $line[1] in
+                config)
+                    _cf-config
+                ;;
+                submit)
+                    _cf-submit
+                ;;
+                list)
+                    _cf-list
+                ;;
+                parse)
+                    _cf-parse
+                ;;
+                gen)
+                    _cf-gen
+                ;;
+                test)
+                    _cf-test
+                ;;
+                watch)
+                    _cf-watch
+                ;;
+                open)
+                    _cf-open
+                ;;
+                stand)
+                    _cf-stand
+                ;;
+                sid)
+                    _cf-sid
+                ;;
+                race)
+                    _cf-race
+                ;;
+                pull)
+                    _cf-pull
+                ;;
+                clone)
+                    _cf-clone
+                ;;
+                upgrade)
+                    _cf-upgrade
+                ;;
+            esac
+        ;;
+    esac
+
+}
+
+_cf-config ()
+{
+    local context state state_descr line
+    typeset -A opt_args
+
+    _arguments -C \
+        ':command:->command' \
+        
+}
+
+_cf-submit ()
+{
+    local context state state_descr line
+    typeset -A opt_args
+
+    if [[ $words[$CURRENT] == -* ]] ; then
+        _arguments -C \
+        ':command:->command' \
+		'(-f=-)-f=-' \
+		'(--file=-)--file=-' \
+
+    else
+        myargs=('<specifier>')
+        _message_next_arg
+    fi
+}
+
+_cf-list ()
+{
+    local context state state_descr line
+    typeset -A opt_args
+
+    if [[ $words[$CURRENT] == -* ]] ; then
+        _arguments -C \
+        ':command:->command' \
+
+    else
+        myargs=('<specifier>')
+        _message_next_arg
+    fi
+}
+
+_cf-parse ()
+{
+    local context state state_descr line
+    typeset -A opt_args
+
+    if [[ $words[$CURRENT] == -* ]] ; then
+        _arguments -C \
+        ':command:->command' \
+
+    else
+        myargs=('<specifier>')
+        _message_next_arg
+    fi
+}
+
+_cf-gen ()
+{
+    local context state state_descr line
+    typeset -A opt_args
+
+    if [[ $words[$CURRENT] == -* ]] ; then
+        _arguments -C \
+        ':command:->command' \
+
+    else
+        myargs=('<alias>')
+        _message_next_arg
+    fi
+}
+
+_cf-test ()
+{
+    local context state state_descr line
+    typeset -A opt_args
+
+    if [[ $words[$CURRENT] == -* ]] ; then
+        _arguments -C \
+        ':command:->command' \
+
+    else
+        myargs=('<file>')
+        _message_next_arg
+    fi
+}
+
+_cf-watch ()
+{
+    local context state state_descr line
+    typeset -A opt_args
+
+    if [[ $words[$CURRENT] == -* ]] ; then
+        _arguments -C \
+        ':command:->command' \
+
+    else
+        myargs=('<specifier>')
+        _message_next_arg
+    fi
+}
+
+_cf-open ()
+{
+    local context state state_descr line
+    typeset -A opt_args
+
+    if [[ $words[$CURRENT] == -* ]] ; then
+        _arguments -C \
+        ':command:->command' \
+
+    else
+        myargs=('<specifier>')
+        _message_next_arg
+    fi
+}
+
+_cf-stand ()
+{
+    local context state state_descr line
+    typeset -A opt_args
+
+    if [[ $words[$CURRENT] == -* ]] ; then
+        _arguments -C \
+        ':command:->command' \
+
+    else
+        myargs=('<specifier>')
+        _message_next_arg
+    fi
+}
+
+_cf-sid ()
+{
+    local context state state_descr line
+    typeset -A opt_args
+
+    if [[ $words[$CURRENT] == -* ]] ; then
+        _arguments -C \
+        ':command:->command' \
+
+    else
+        myargs=('<specifier>')
+        _message_next_arg
+    fi
+}
+
+_cf-race ()
+{
+    local context state state_descr line
+    typeset -A opt_args
+
+    if [[ $words[$CURRENT] == -* ]] ; then
+        _arguments -C \
+        ':command:->command' \
+
+    else
+        myargs=('<specifier>')
+        _message_next_arg
+    fi
+}
+
+_cf-pull ()
+{
+    local context state state_descr line
+    typeset -A opt_args
+
+    if [[ $words[$CURRENT] == -* ]] ; then
+        _arguments -C \
+        ':command:->command' \
+
+    else
+        myargs=('<specifier>')
+        _message_next_arg
+    fi
+}
+
+_cf-clone ()
+{
+    local context state state_descr line
+    typeset -A opt_args
+
+    if [[ $words[$CURRENT] == -* ]] ; then
+        _arguments -C \
+        ':command:->command' \
+
+    else
+        myargs=('<handle>')
+        _message_next_arg
+    fi
+}
+
+_cf-upgrade ()
+{
+    local context state state_descr line
+    typeset -A opt_args
+
+    _arguments -C \
+        ':command:->command' \
+        
+}
+
+
+_cf "$@"

@@ -1,0 +1,13 @@
+.z
+.zcompdump
+.zcompcache
+.zkbd
+.*_history
+*.bak
+.zinit
+.zsh-proxy
+p10k.zsh
+
+.zsh_sessions/
+
+snippets/platform.zsh

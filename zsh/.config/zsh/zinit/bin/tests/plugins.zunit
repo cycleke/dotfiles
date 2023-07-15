@@ -1,0 +1,55 @@
+#!/usr/bin/env zunit
+
+
+@setup {
+  zinit default-ice as'null' light-mode nocompile nocompletions
+  ZBIN=$ZPFX/bin
+  export LC_CTYPE=C
+  export LANG=C
+}
+
+# @test 'nnn' {
+#   run zinit light-mode for jarun/nnn
+#   zinit cd jarun/nnn
+#   run PREFIX=$ZPFX make install; assert $state equals 0
+#   local nnn="$ZPFX/bin/nnn";     assert $nnn   is_executable
+#   $nnn -V;                       assert $state equals 0
+# }
+@test 'pipes' {
+  run zinit for @pipeseroni/pipes.sh
+  # zinit cd pipeseroni/pipes.sh
+  run zinit run pipeseroni/pipes.sh make PREFIX=$ZPFX install; assert $state equals 0
+  local pipes="$ZBIN/pipes.sh"; assert $pipes is_executable
+  $pipes -v; assert $state equals 0
+}
+@test 'tree' {
+  run zinit light-mode for Old-Man-Programmer/tree
+  zinit cd Old-Man-Programmer/tree
+  run make PREFIX=$ZPFX install; assert $state equals 0
+  local tree="$ZBIN/tree";   assert $tree  is_executable
+  $tree -v;                      assert $state equals 0
+}
+@test 'vim' {
+  run zinit light-mode for vim/vim
+  zinit cd vim/vim
+  run ./configure --prefix=$ZPFX && make PREFIX=$ZPFX install
+  assert $state equals 0
+  local vim="$ZBIN/vim"; assert $vim is_executable
+  $vim --version; assert $state equals 0
+}
+@test 'zsh-completions' {
+  run zinit light-mode for zsh-users/zsh-completions
+  zinit cd zsh-users/zsh-completions
+  run zinit creinstall -q .; assert $state equals 0
+  local broken_completions=($(echo "$ZINIT[COMPLETIONS_DIR]"/*(-@))); assert "${#broken_completions[@]}" equals 0
+}
+# @test 'zsh_bin' {
+#   run zinit as'null' sbin'bin/zsh' for @romkatv/zsh-bin
+#   assert $state equals 0
+#   local zsh_static="$ZPFX/bin/zsh"
+#   assert "$zsh_static" is_executable
+#   $zsh_static --help
+#   assert $state equals 0
+# }
+
+# vim:ft=zsh:sw=2:sts=2:et:foldmarker=@test,}:foldmethod=marker
