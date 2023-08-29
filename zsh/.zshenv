@@ -11,6 +11,7 @@ path_prepend /usr/bin/
 path_prepend /usr/local/bin
 path_prepend $HOME/bin
 path_prepend $HOME/.local/bin
+path_prepend $HOME/go/bin
 
 export NPM_PACKAGES="${HOME}/.npm-global"
 export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
@@ -38,7 +39,7 @@ export RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
 
 [ -f /opt/homebrew/bin/brew ] && eval $(/opt/homebrew/bin/brew shellenv)
 
-export DEFAULT_USER="yagoguo"
+export DEFAULT_USER="cycleke"
 
 # Local Variables:
 # mode: sh

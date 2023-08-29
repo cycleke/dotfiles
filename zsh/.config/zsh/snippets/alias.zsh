@@ -13,6 +13,12 @@ alias tkss='tmux kill-session -t'
 # trash
 alias rm='trash-put' rt='trash-restore' re='trash-empty' rl='trash-list'
 
+# git
+alias gcls='git clone --recurse-submodules --sparse'
+alias gclsfn='git clone --recurse-submodules --sparse --filter=blob:none'
+alias gclsfm='git clone --recurse-submodules --sparse --filter=blob:limit=1m'
+alias gsco='git sparse-checkout'
+
 # 杂七杂八
 alias reload='source $ZDOTDIR/.zshrc'
 alias h='tldr'

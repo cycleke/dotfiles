@@ -87,5 +87,3 @@ case $THEME in
         zinit light romkatv/powerlevel10k
         ;;
 esac
-
-export PATH="/opt/homebrew/bin:$PATH"
