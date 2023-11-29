@@ -1,4 +1,4 @@
-vim.o.guifont = "Pes Mono,LXGW WenKai Mono GB,Apple Symbols:h15"
+vim.o.guifont = "Iosevka Nerd Font Mono,LXGW WenKai Mono GB,Apple Symbols:h15"
 
 -- local alpha = function()
 --     return string.format("%x", math.floor(255 * vim.g.transparency or 0.9))

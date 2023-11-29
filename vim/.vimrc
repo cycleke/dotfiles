@@ -14,10 +14,12 @@ set updatetime=300
 set signcolumn=yes
 
 " Transparent Background (For i3 and compton)
-highlight Normal guibg=NONE ctermbg=NONE
-highlight LineNr guibg=NONE ctermbg=NONE
+" highlight Normal guibg=NONE ctermbg=NONE
+" highlight LineNr guibg=NONE ctermbg=NONE
 
 syntax on
+syntax enable
+filetype on
 filetype plugin indent on
 set tabstop=2 softtabstop=2 shiftwidth=2 expandtab smarttab autoindent
 set incsearch ignorecase smartcase hlsearch
@@ -29,6 +31,18 @@ set foldmethod=marker foldlevel=3 foldenable
 set nobackup noswapfile noundofile autowrite noerrorbells
 set wrap breakindent encoding=utf-8 number title cursorline
 set guioptions-=T guioptions-=m guioptions-=r guioptions-=egrL
+
+" Complete
+set wildmenu                             " vim自身命名行模式智能补全
+set completeopt=menuone,preview,noselect " 补全时不显示窗口，只显示补全列表
+set omnifunc=syntaxcomplete#Complete     " 设置全能补全
+set shortmess+=c                         " 设置补全静默
+set cpt+=kspell                          " 设置补全单词
+
+" Coding
+set termencoding=utf-8
+set encoding=utf8
+set fileencodings=utf8,ucs-bom,gbk,cp936,gb2312,gb18030
 
 " HTML, XML, Jinja
 autocmd FileType html setlocal shiftwidth=2 tabstop=2 softtabstop=2

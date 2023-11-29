@@ -54,17 +54,27 @@ return require("packer").startup(function(use)
 		"rose-pine/neovim",
 		as = "rose-pine",
 	})
-	use("EdenEast/nightfox.nvim")
+	use({
+		"f-person/auto-dark-mode.nvim",
+		config = function()
+			require("auto-dark-mode").setup({
+				update_interval = 1000,
+				set_dark_mode = function()
+					vim.api.nvim_set_option("background", "dark")
+					vim.cmd("colorscheme rose-pine")
+				end,
+				set_light_mode = function()
+					vim.api.nvim_set_option("background", "light")
+					vim.cmd("colorscheme rose-pine-dawn")
+				end,
+			})
+			require("auto-dark-mode").init()
+		end,
+	})
 
 	-- 文件搜索
 	use("nvim-telescope/telescope.nvim")
 	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
-
-	-- 远程编辑
-	use({
-		"chipsenkbeil/distant.nvim",
-		branch = "v0.2",
-	})
 
 	if packer_bootstrap then
 		require("packer").sync()

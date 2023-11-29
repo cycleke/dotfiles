@@ -10,7 +10,6 @@ require("plugins.wilder")
 require("plugins.indent-blankline")
 require("plugins.bufferline")
 require("plugins.telescope")
-require("plugins.distant")
 
 -- LSP
 require("lsp.setup")
