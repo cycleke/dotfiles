@@ -1,6 +1,7 @@
 # python
 alias py2='python2'
-alias py='python3' py3='python3' ipy='ipython3' ipy3='ipython3'
+alias python='python3' ipython='ipython3'
+alias py='python3' py3='python3' ipy='ipython3' ipy3='ipython3' pip='pip3'
 
 # tmux
 alias ta='tmux attach -t'

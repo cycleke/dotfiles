@@ -1,7 +1,12 @@
+export XDG_CONFIG_HOME=$HOME/.config
+export XDG_CACHE_HOME=$HOME/.cache
+export XDG_DATA_HOME=$HOME/.local/share
+export ZDOTDIR=$XDG_CONFIG_HOME/zsh
+
 path_prepend() {
-    if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
-        PATH="$1${PATH:+":$PATH"}"
-    fi
+	if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
+		PATH="$1${PATH:+":$PATH"}"
+	fi
 }
 
 path_prepend /sbin
@@ -22,19 +27,15 @@ export NVM_DIR="$HOME/.nvm"
 
 [ -f "${GHCUP_INSTALL_BASE_PREFIX:=$HOME}/.ghcup/env" ] && source "${GHCUP_INSTALL_BASE_PREFIX:=$HOME}/.ghcup/env"
 
-export XDG_CONFIG_HOME=$HOME/.config
-export XDG_CACHE_HOME=$HOME/.cache
-export XDG_DATA_HOME=$HOME/.local/share
+if [[ $OSTYPE == (linux-gnu|linux) ]]; then
+	export GTK_IM_MODULE=fcitx5
+	export QT_IM_MODULE=fcitx5
+	export XMODIFIERS="@im=fcitx5"
+fi
 
-ZDOTDIR=$XDG_CONFIG_HOME/zsh
-
-export EDITOR="emacsclient -c -a \"\""
-export GTK_IM_MODULE=fcitx5
-export QT_IM_MODULE=fcitx5
-export XMODIFIERS="@im=fcitx5"
-
-export RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static
-export RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
+export RUSTUP_DIST_SERVER="https://rsproxy.cn"
+export RUSTUP_UPDATE_ROOT="https://rsproxy.cn/rustup"
+export CARGO_UNSTABLE_SPARSE_REGISTRY=true
 [ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
 
 [ -f /opt/homebrew/bin/brew ] && eval $(/opt/homebrew/bin/brew shellenv)
