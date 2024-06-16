@@ -73,3 +73,7 @@ vim.api.nvim_create_autocmd({ "FocusGained", "InsertLeave" }, {
 	pattern = { "*" },
 	command = "set relativenumber",
 })
+
+-- GUI
+vim.g.transparency = 0.9
+vim.opt.guifont = "Iosvmata,LXGW WenKai Mono,HanaMinB,Segoe UI Emoji,Segoe UI Symbol:h12"
