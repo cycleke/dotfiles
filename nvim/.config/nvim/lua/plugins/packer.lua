@@ -36,7 +36,10 @@ return require("packer").startup(function(use)
 	-- Treesitter
 	use({
 		"nvim-treesitter/nvim-treesitter",
-		run = ":TSUpdate",
+		run = function()
+			local ts_update = require("nvim-treesitter.install").update({ with_sync = true })
+			ts_update()
+		end,
 	})
 
 	-- UI 设置
@@ -50,25 +53,52 @@ return require("packer").startup(function(use)
 	})
 	use("lukas-reineke/indent-blankline.nvim")
 	use("akinsho/bufferline.nvim")
+
 	use({
-		"rose-pine/neovim",
-		as = "rose-pine",
-	})
-	use({
-		"f-person/auto-dark-mode.nvim",
+		"miikanissi/modus-themes.nvim",
 		config = function()
-			require("auto-dark-mode").setup({
-				update_interval = 1000,
-				set_dark_mode = function()
-					vim.api.nvim_set_option("background", "dark")
-					vim.cmd("colorscheme rose-pine")
-				end,
-				set_light_mode = function()
-					vim.api.nvim_set_option("background", "light")
-					vim.cmd("colorscheme rose-pine-dawn")
-				end,
+			require("modus-themes").setup({
+				style = "auto",
+				variant = "deuteranopia",
+				styles = {
+					comments = { italic = true },
+				},
 			})
-			require("auto-dark-mode").init()
+			vim.cmd([[colorscheme modus]])
+		end,
+	})
+
+	use({
+		"stevearc/conform.nvim",
+		config = function()
+			local conform = require("conform")
+			conform.setup({
+				log_level = vim.log.levels.ERROR,
+				notify_on_error = true,
+				notify_no_formatters = true,
+				format_on_save = false,
+				formatters_by_ft = {
+					lua = { "stylua" },
+					python = { "black" },
+					rust = { "rustfmt" },
+					javascript = { "prettier" },
+					sh = { "shfmt" },
+					c = { "clang-format" },
+					cpp = { "clang-format" },
+					proto = { "clang-format" },
+				},
+				formatters = {
+					rustfmt = {
+						prepend_args = { "--edition=2021" },
+					},
+				},
+			})
+			vim.keymap.set("n", "<leader>cf", function()
+				local success = conform.format({ async = true })
+			end, { desc = "Format File" })
+			vim.keymap.set("v", "<leader>cf", function()
+				local success = conform.format({ async = true })
+			end, { desc = "Format File" })
 		end,
 	})
 

@@ -1,7 +1,0 @@
-ci/cd: ['.github/**/*']
-completion: ['_zinit']
-docker: ['docker/*']
-docs: ['*.md', 'doc/**/*']
-scripts: ['scripts/*']
-tests: ['.zunit.yml', 'tests/**/*']
-zinit: ['_zinit', 'zinit*.zsh']

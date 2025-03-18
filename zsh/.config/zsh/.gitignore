@@ -6,9 +6,9 @@
 *.bak
 .zinit
 .zsh-proxy
-p10k.zsh
+*p10k.zsh
 .histfile
 
 .zsh_sessions/
 
-snippets/platform.zsh
+custom.zsh

@@ -74,6 +74,9 @@ vim.api.nvim_create_autocmd({ "FocusGained", "InsertLeave" }, {
 	command = "set relativenumber",
 })
 
--- GUI
-vim.g.transparency = 0.9
-vim.opt.guifont = "Iosvmata,LXGW WenKai Mono,HanaMinB,Segoe UI Emoji,Segoe UI Symbol:h12"
+-- GUI 设置
+-- vim.g.transparency = 0.9
+-- vim.opt.guifont = "IBM Plex Mono,LXGW WenKai Mono GB Screen,Noto Color Emoji,Noto Sans Symbols:h12"
+
+-- 禁用鼠标
+vim.opt.mouse = ""
