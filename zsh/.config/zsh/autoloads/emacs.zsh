@@ -35,58 +35,58 @@ alias eeval="$EMACS_PLUGIN_LAUNCHER --eval"
 alias eframe='emacsclient --alternate-editor="" --create-frame'
 
 function magit() {
-	if [ -d "$1" ]; then
-		cd $1
-	fi
-	"$EMACS_PLUGIN_LAUNCHER" --eval "(magit)" --no-wait
+    if [ -d "$1" ]; then
+        cd $1
+    fi
+    "$EMACS_PLUGIN_LAUNCHER" --eval "(magit)" --no-wait
 }
 
 function tmagit() {
-	if [ -d "$1" ]; then
-		cd $1
-	fi
-	"$EMACS_PLUGIN_LAUNCHER" --eval "(magit)" -nw
+    if [ -d "$1" ]; then
+        cd $1
+    fi
+    "$EMACS_PLUGIN_LAUNCHER" --eval "(magit)" -nw
 }
 
 function mframe() {
-	if [ -d "$1" ]; then
-		cd $1
-	fi
-	emacsclient --alternate-editor "" --create-frame --eval "(magit)" --no-wait
+    if [ -d "$1" ]; then
+        cd $1
+    fi
+    emacsclient --alternate-editor "" --create-frame --eval "(magit)" --no-wait
 }
 
 # Emacs ANSI Term tracking
 if [[ -n "$INSIDE_EMACS" ]]; then
-	chpwd_emacs() { print -P "\033AnSiTc %d"; }
-	print -P "\033AnSiTc %d" # Track current working directory
-	print -P "\033AnSiTu %n" # Track username
+    chpwd_emacs() { print -P "\033AnSiTc %d"; }
+    print -P "\033AnSiTc %d" # Track current working directory
+    print -P "\033AnSiTu %n" # Track username
 
-	# add chpwd hook
-	autoload -Uz add-zsh-hook
-	add-zsh-hook chpwd chpwd_emacs
+    # add chpwd hook
+    autoload -Uz add-zsh-hook
+    add-zsh-hook chpwd chpwd_emacs
 fi
 
 # Write to standard output the path to the file
 # opened in the current buffer.
 function efile {
-	local cmd="(let ((buf-name (buffer-file-name (window-buffer))))
+    local cmd="(let ((buf-name (buffer-file-name (window-buffer))))
                (if buf-name (file-name-directory buf-name)))"
-	local file="$("$EMACS_PLUGIN_LAUNCHER" --eval "$cmd" | tr -d \")"
+    local file="$("$EMACS_PLUGIN_LAUNCHER" --eval "$cmd" | tr -d \")"
 
-	if [[ -z "$file" ]]; then
-		echo "Can't deduce current buffer filename." >&2
-		return 1
-	fi
+    if [[ -z "$file" ]]; then
+        echo "Can't deduce current buffer filename." >&2
+        return 1
+    fi
 
-	echo "$file"
+    echo "$file"
 }
 
 # Write to standard output the directory of the file
 # opened in the current buffer
 function ecd {
-	local file
-	file="$(efile)" || return $?
-	echo "${file:h}"
+    local file
+    file="$(efile)" || return $?
+    echo "${file:h}"
 }
 
 ## Local Variables:

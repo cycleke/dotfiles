@@ -1,14 +1,14 @@
+*.bak
+
 .z
 .zcompdump
 .zcompcache
 .zkbd
-.*_history
-*.bak
-.zinit
-.zsh-proxy
-*p10k.zsh
-.histfile
-
 .zsh_sessions/
 
-custom.zsh
+.histfile
+.*_history
+
+*p10k.zsh
+
+custom/

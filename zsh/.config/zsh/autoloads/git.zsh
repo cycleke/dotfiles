@@ -1,16 +1,9 @@
+#!/hint/zsh
+
 alias g="git"
 
 alias ga="git add"
 alias gaa="git add --all"
-
-function git-shrink() {
-    git reflog expire --expire-unreachable=now --all
-    git fsck --full --unreachable
-    git repack -A -d
-    git gc --aggressive --prune=now
-    git lfs prune
-    git remote prune origin
-}
 
 alias gbl="git blame -w"
 
@@ -24,6 +17,7 @@ alias gco="git checkout"
 alias gcor="git checkout --recurse-submodules"
 alias gcb="git checkout -b"
 alias gcB="git checkout -B"
+
 alias gcp="git cherry-pick"
 alias gcpa="git cherry-pick --abort"
 alias gcpc="git cherry-pick --continue"
@@ -32,6 +26,7 @@ alias gcl="git clone --recurse-submodule"
 alias gcl1="git clone --recurse-submodules --depth=1"
 
 alias gfh="git fetch"
+alias gfa="git fetch --all"
 
 alias gc="git commit --verbose"
 alias gc!="git commit --verbose --amend"
@@ -61,6 +56,15 @@ alias grb="git rebase"
 alias grba="git rebase --abort"
 alias grbc="git rebase --continue"
 alias grbi="git rebase --interactive"
+
+alias grbidev="git rebase --interactive dev"
+alias grbirdev="git rebase --interactive origin/dev"
+
+alias grbimain="git rebase --interactive main"
+alias grbirmain="git rebase --interactive origin/main"
+
+alias grbimaster="git rebase --interactive master"
+alias grbirmaster="git rebase --interactive origin/master"
 
 alias grf="git reflog"
 
@@ -101,3 +105,29 @@ alias gcls="git clone --recurse-submodules --sparse"
 alias gclsfn="git clone --recurse-submodules --sparse --filter=blob:none"
 alias gclsfm="git clone --recurse-submodules --sparse --filter=blob:limit=1m"
 alias gsco="git sparse-checkout"
+
+function g-shrink() {
+    git reflog expire --expire-unreachable=now --all
+    git fsck --full --unreachable
+    git repack -A -d
+    git gc --aggressive --prune=now
+    git lfs prune
+    git remote prune origin
+}
+
+# Pack the current HEAD.
+pack() {
+    cdir=$(basename $(pwd))
+    git archive --prefix=${cdir}-$(git rev-parse --short HEAD)/ -o ${cdir}.tar.gz HEAD
+}
+
+packzip() {
+    cdir=$(basename $(pwd))
+    git archive -o ${cdir}.zip HEAD
+}
+
+packzst() {
+    cdir=$(basename $(pwd))
+    git config tar.tar.zst.command "zstd"
+    git archive --prefix=${cdir}-$(git rev-parse --short HEAD)/ -o ${cdir}.tar.zst HEAD
+}

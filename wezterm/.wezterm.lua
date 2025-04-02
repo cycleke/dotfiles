@@ -6,48 +6,46 @@ if wezterm.config_builder then
 	config = wezterm.config_builder()
 end
 
-local launch_menu = {}
-local default_prog = {}
+local LIGHT_COLOR_SCHEME = "Ef-Deuteranopia-Light"
+local DARK_COLOR_SCHEME = "Ef-Deuteranopia-Dark"
+
 local fallback_fonts = {}
 
-local light_theme = "Ef-Deuteranopia-Light"
-local dark_theme = "Ef-Deuteranopia-Dark"
-
 if wezterm.target_triple:find("windows") then
-	-- default_prog = { "powershell" }
-	default_prog = { "nu.exe", "--login" }
+	config.default_prog = { "nu.exe", "--login" }
+	config.win32_system_backdrop = "Acrylic"
 
 	fallback_fonts = {
 		"Symbols Nerd Font",
-		"Planschrift P1",
-		"Planschrift P2",
 		"Noto Color Emoji",
 		"Noto Sans Symbols 2",
 		"Noto Sans Symbols",
+		"TH-Ming-P2",
+		"Noto Unicode",
 	}
 elseif wezterm.target_triple:find("darwin") then
-	default_prog = { "zsh", "--login" }
-	config.macos_window_background_blur = 8
-	config.front_end = "WebGpu"
-	config.webgpu_power_preference = "HighPerformance"
+	config.default_prog = { "zsh", "--login" }
+	config.macos_window_background_blur = 16
+	config.native_macos_fullscreen_mode = true
 
 	fallback_fonts = {
 		"Symbols Nerd Font",
-		"Planschrift P1",
-		"Planschrift P2",
+		"Apple Symbols",
 		"Apple Color Emoji",
 		"Apple Symbols",
+		"TH-Ming-P2",
+		"Noto Unicode",
 	}
 elseif wezterm.target_triple:find("linux") then
-	default_prog = { "zsh", "--login" }
+	config.default_prog = { "zsh", "--login" }
 
 	fallback_fonts = {
 		"Symbols Nerd Font",
-		"Planschrift P1",
-		"Planschrift P2",
 		"Noto Color Emoji",
 		"Noto Sans Symbols 2",
 		"Noto Sans Symbols",
+		"TH-Ming-P2",
+		"Noto Unicode",
 	}
 end
 
@@ -57,94 +55,87 @@ local function fonts_with_fallback(fonts)
 	end
 	return wezterm.font_with_fallback(fonts)
 end
-
-local monaspace_features = {
+local MONASPACE_ENABLE_FEATURES = {
 	"calt",
+	"ss01",
 	"ss02",
 	"ss03",
 	"ss04",
-	"ss06",
 	"ss07",
-	"ss08",
-	"ss09",
 	"liga",
+	"cv01=2",
 }
 
-local profiles = {
-	Default = {},
-	Editor = {
-		font = fonts_with_fallback({
-			-- { family = "Lilex", harfbuzz_features = { "zero", "cv03", "cv09" } },
-			{
-				family = "Monaspace Neon Var",
-				harfbuzz_features = monaspace_features,
-			},
-			"LXGW Neo ZhiSong",
-		}),
+local TERM_FONTS = fonts_with_fallback({
+	{
+		family = "Maple Mono NF CN",
+		harfbuzz_features = { "liga", "cv02" },
+	},
+})
+local CODE_FONTS = fonts_with_fallback({
+	{
+		family = "Monaspace Neon",
+		harfbuzz_features = MONASPACE_ENABLE_FEATURES,
+	},
+	"KingHwa_OldSong",
+})
+local HANDWRITING_FONTS = fonts_with_fallback({
+	{
+		family = "Monaspace Radon",
+		harfbuzz_features = MONASPACE_ENABLE_FEATURES,
+	},
+	"ToneOZ-Tsuipita-TC",
+})
+
+local PROFILES = {
+	default = {},
+	editor = {
+		font = CODE_FONTS,
 		font_size = 14,
 		font_rules = {
 			{
 				italic = true,
-				font = fonts_with_fallback({
-					{
-						family = "Monaspace Radon Var",
-						harfbuzz_features = monaspace_features,
-					},
-					"LXGW WenKai TC",
-				}),
+				font = HANDWRITING_FONTS,
 			},
 		},
 		-- hide_tab_bar_if_only_one_tab = true,
 	},
 }
 
--- 基础配置
 config.check_for_updates = false
 config.audible_bell = "Disabled"
 config.selection_word_boundary = " \t\n{}[]()<>\"'`"
 
--- UI
-config.color_scheme = light_theme
+config.color_scheme = LIGHT_COLOR_SCHEME
 config.default_cursor_style = "SteadyBlock"
-config.foreground_text_hsb = {
-	hue = 1.0,
-	saturation = 1.2,
-	brightness = 1.5,
-}
 
--- Font
-config.font = fonts_with_fallback({ "Maple Mono NF", "Huiwen-MinchoGBK" })
-config.font_size = 14
-config.freetype_load_target = "Normal"
-config.enable_kitty_graphics = true
-
--- Window
-config.native_macos_fullscreen_mode = true
+config.font = TERM_FONTS
+config.font_size = 15
 config.adjust_window_size_when_changing_font_size = false
+
 config.window_background_opacity = 0.9
 config.text_background_opacity = 0.3
-config.macos_window_background_blur = 10
+
 config.window_padding = {
 	left = "0.5cell",
 	right = "0.3cell",
 	top = "0.3cell",
 	bottom = "0.3cell",
 }
-config.window_background_image_hsb = {
-	brightness = 0.8,
-	hue = 1.0,
-	saturation = 1.0,
+config.window_frame = {
+	font = wezterm.font({
+		family = "Monaspace Krypton",
+	}),
+	font_size = 12,
 }
 
--- Tab Bar
 config.enable_tab_bar = true
 config.use_fancy_tab_bar = true
 config.hide_tab_bar_if_only_one_tab = false
 config.show_tab_index_in_tab_bar = true
 config.tab_bar_at_bottom = false
-config.tab_max_width = 30
 config.switch_to_last_active_tab_when_closing_tab = false
-config.window_decorations = "INTEGRATED_BUTTONS|RESIZE"
+config.window_decorations = "INTEGRATED_BUTTONS | RESIZE"
 
 -- Keybindings
 config.disable_default_key_bindings = true
@@ -184,15 +175,12 @@ config.keys = {
 		action = act.CloseCurrentPane({ confirm = true }),
 	},
 
-	{ key = "j", mods = "CTRL|SHIFT", action = act.ActivateTabRelative(-1) },
-	{ key = "k", mods = "CTRL|SHIFT", action = act.ActivateTabRelative(1) },
-	{ key = "{", mods = "CTRL|SHIFT", action = act.MoveTabRelative(-1) },
-	{ key = "}", mods = "CTRL|SHIFT", action = act.MoveTabRelative(1) },
-
 	{ key = "Tab", mods = "CTRL", action = act.ActivateTabRelative(1) },
 	{ key = "Tab", mods = "CTRL|SHIFT", action = act.ActivateTabRelative(-1) },
+
 	{ key = "j", mods = "CTRL|SHIFT", action = act.ActivateTabRelative(-1) },
 	{ key = "k", mods = "CTRL|SHIFT", action = act.ActivateTabRelative(1) },
+
 	{ key = "{", mods = "CTRL|SHIFT", action = act.MoveTabRelative(-1) },
 	{ key = "}", mods = "CTRL|SHIFT", action = act.MoveTabRelative(1) },
 
@@ -279,9 +267,9 @@ config.mouse_bindings = {
 
 local function scheme_for_appearance(appearance)
 	if appearance:find("Dark") then
-		return dark_theme
+		return DARK_COLOR_SCHEME
 	else
-		return light_theme
+		return LIGHT_COLOR_SCHEME
 	end
 end
 
@@ -295,60 +283,97 @@ wezterm.on("window-config-reloaded", function(window, pane)
 	end
 end)
 
-wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
-	local title_prefix = (tab.is_active and "🎸 ") or ""
-	local pane = tab.active_pane
+local function tab_title(tab_info)
+	local title = tab_info.tab_title
+	-- if the tab title is explicitly set, take that
+	if title and #title > 0 then
+		return title
+	end
+	-- Otherwise, use the title from the active pane in that tab
+	return tab_info.active_pane.title
+end
 
-	local title_content = ""
-	local tab_title = tab.tab_title
-	if tab_title and #tab_title > 0 then
-		title_content = tab_title
+wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
+	local NORD_COLOR_SCHEME = wezterm.get_builtin_color_schemes()["nord"]
+
+	local background = NORD_COLOR_SCHEME.ansi[1]
+	local foreground = NORD_COLOR_SCHEME.ansi[6]
+	local title_prefix = tostring(tab.tab_index + 1) .. "."
+
+	if tab.is_active then
+		-- Symbols: "🎸" "§ "
+		title_prefix = "§ "
+
+		background = NORD_COLOR_SCHEME.brights[1]
+		foreground = NORD_COLOR_SCHEME.brights[4]
+	elseif hover then
+		background = NORD_COLOR_SCHEME.cursor_bg
+		foreground = NORD_COLOR_SCHEME.cursor_fg
 	end
 
+	local title_content = tab_title(tab)
+	local pane = tab.active_pane
+
 	if pane.domain_name then
-		if title_content and #title_content > 0 then
-			title_content = title_content .. " - (" .. pane.domain_name .. ")"
+		local domain_suffix = pane.domain_name
+
+		if domain_suffix == "devcloud" then
+			domain_suffix = " ☁️"
+		elseif domain_suffix == "bastion" then
+			domain_suffix = " 🔗"
+		elseif domain_suffix == "local" then
+			domain_suffix = " 🖥️"
 		else
-			title_content = pane.domain_name
+			domain_suffix = " - (" .. domain_suffix .. ")"
+		end
+
+		if title_content and #title_content > 0 then
+			title_content = title_content .. domain_suffix
+		else
+			title_content = "∅" .. domain_suffix
 		end
 	end
 
-	local index = tostring(tab.tab_index + 1) .. "."
-	local title_content = " " .. wezterm.truncate_right(title_content, max_width)
+	title_content = wezterm.truncate_right(title_content, max_width)
 
 	return {
-		{ Attribute = { Intensity = "Bold" } },
-		{ Text = title_prefix },
+		{ Background = { Color = background } },
+		{ Foreground = { Color = foreground } },
+
 		{ Attribute = { Intensity = "Normal" } },
-		{ Text = index },
+		{ Text = title_prefix },
+
 		{ Attribute = { Intensity = "Bold" } },
 		{ Text = title_content },
+
 		{ Attribute = { Intensity = "Normal" } },
 	}
 end)
 
 wezterm.on("format-window-title", function(tab, pane, tabs, panes, config)
-	local status = ""
-	if tab.active_pane.is_zoomed then
-		status = status .. "Z,"
-	end
+	-- local status = ""
+	-- if tab.active_pane.is_zoomed then
+	-- 	status = status .. "Z,"
+	-- end
 
-	if #status > 0 then
-		status = "[" .. status:sub(1, -2) .. "]"
-	end
+	-- if #status > 0 then
+	-- 	status = "[" .. status:sub(1, -2) .. "]"
+	-- end
+
+	-- return title .. " " .. status
 
 	local pane = tab.active_pane
-	local title = "WezTerm(" .. pane.domain_name .. ")"
+	local title = pane.domain_name .. " - WezTerm"
 	local tab_title = tab.tab_title
 	if #tab_title > 0 then
-		title = "WezTerm(" .. tab_title .. ")"
+		title = tab_title .. " - WezTerm"
 	end
 
-	return title .. " " .. status
+	return title
 end)
 
 local act_change_profile_choices = {}
-for key, _ in pairs(profiles) do
+for key, _ in pairs(PROFILES) do
 	table.insert(act_change_profile_choices, { label = key })
 end
 
@@ -365,13 +390,13 @@ local act_change_profile = act.InputSelector({
 		if not id and not label then
 			wezterm.log_info("Profile change cancelled")
 		else
-			wezterm.log_info("You selected profile: ", id, label)
+			wezterm.log_info("You selected profile: ", label)
 
-			local profile = profiles[label]
+			local profile = PROFILES[label]
 			if profile ~= nil then
 				window:set_config_overrides(profile)
 			else
-				wezterm.log_err("Unknown profile: ", id, label)
+				wezterm.log_error("Unknown profile: ", id, label)
 			end
 		end
 	end),
@@ -405,16 +430,31 @@ wezterm.on("augment-command-palette", function(window, pane)
 	}
 end)
 
+wezterm.on("trigger-editor-profile", function(window, pane)
+	local old_overrides = window:get_config_overrides() or {}
+	local new_overrides = nil
+	if old_overrides.font == nil then
+		new_overrides = PROFILES["editor"]
+	else
+		new_overrides = PROFILES["default"]
+	end
+
+	new_overrides.color_scheme = old_overrides.color_scheme
+	window:set_config_overrides(new_overrides)
+end)
+
 table.insert(config.keys, {
 	key = "m",
 	mods = "CTRL|SHIFT",
 	action = act_rename_tab,
 })
+table.insert(config.keys, {
+	key = "?",
+	mods = "CTRL|SHIFT",
+	action = act.EmitEvent("trigger-editor-profile"),
+})
 
--- Custom begin
--- Custom end
-
-config.launch_menu = launch_menu
-config.default_prog = default_prog
+-- Custom Begin
+-- Custom End
 
 return config

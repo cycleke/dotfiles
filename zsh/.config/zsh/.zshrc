@@ -28,4 +28,3 @@ zinit light-mode for \
 ### End of Zinit's installer chunk
 
 source ${ZDOTDIR}/zshrc.zsh
-source ${ZDOTDIR}/custom.zsh
