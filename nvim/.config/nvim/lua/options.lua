@@ -1,4 +1,4 @@
--- 自动更新文件
+-- Auto Update Buffer
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
 	pattern = { "*" },
 	command = "checktime",
@@ -6,31 +6,22 @@ vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
 vim.opt.autoread = true
 vim.opt.updatetime = 300
 
--- 设置 leader 键为逗号
-vim.g.mapleader = ","
-
--- 提升 Lua 加载速度
+-- Enable Lua loader
 vim.loader.enable()
 
--- 避免失败
-vim.opt.hidden = true
-
--- 各种文件设置
+-- Disable backup files
 vim.opt.backup = false
 vim.opt.writebackup = false
 vim.opt.swapfile = false
 vim.opt.undofile = false
 vim.opt.autowrite = true
 
--- 剪切板设置
+-- Clipboard
 vim.opt.clipboard = "unnamedplus"
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 vim.opt.mouse = "a"
 
--- 补全增强
-vim.opt.wildmenu = true
-
--- 缩进设置
+-- Tab
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
 vim.opt.shiftwidth = 2
@@ -38,33 +29,26 @@ vim.opt.expandtab = true
 vim.opt.smarttab = true
 vim.opt.autoindent = true
 
-vim.opt.list = true
-vim.opt.listchars:append("trail:»")
-vim.opt.listchars:append("tab:»-")
+-- vim.opt.list = true
+-- vim.opt.listchars:append("trail:»")
+-- vim.opt.listchars:append("tab:»-")
 
--- 搜索设置
+-- Searching
 vim.opt.incsearch = true
-vim.opt.hlsearch = true
+vim.opt.hlsearch = false
 vim.opt.smartcase = true
 vim.opt.ignorecase = true
 
--- UI 设置
+-- UI
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.cursorline = true
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.showmode = false
--- vim.opt.colorcolumn = "80,100,120"
+vim.opt.termguicolors = true
+vim.opt.colorcolumn = "120"
 
--- 编码设置
-vim.opt.encoding = "utf-8"
-vim.opt.fileencodings = "utf-8,gb2312,gbk,gb18030,ucs-bom,cp936,big5,euc-jp,euc-kr,latin1"
-vim.opt.fileformats = "unix,dos,mac"
-
--- 插入模式下用绝对行号, 普通模式下用相对
-vim.opt.number = true
-vim.opt.relativenumber = true
 vim.api.nvim_create_autocmd({ "FocusLost", "InsertEnter" }, {
 	pattern = { "*" },
 	command = "set norelativenumber number",
@@ -74,9 +58,7 @@ vim.api.nvim_create_autocmd({ "FocusGained", "InsertLeave" }, {
 	command = "set relativenumber",
 })
 
--- GUI 设置
--- vim.g.transparency = 0.9
--- vim.opt.guifont = "IBM Plex Mono,LXGW WenKai Mono GB Screen,Noto Color Emoji,Noto Sans Symbols:h12"
-
--- 禁用鼠标
-vim.opt.mouse = ""
+-- Encoding
+vim.opt.encoding = "utf-8"
+vim.opt.fileencodings = "utf-8,gb2312,gbk,gb18030,ucs-bom,cp936,big5,euc-jp,euc-kr,latin1"
+vim.opt.fileformats = "unix,dos,mac"

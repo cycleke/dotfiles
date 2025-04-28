@@ -26,3 +26,14 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+### Backup
+*.bak
+*.gho
+*.ori
+*.orig
+*.tmp
+
+### Emacs
+*~
+\#*\#
+.\#*

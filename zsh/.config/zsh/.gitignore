@@ -1,14 +1,43 @@
-*.bak
+### Zsh ###
+# Zsh compiled script + zrecompile backup
+*.zwc
+*.zwc.old
 
-.z
-.zcompdump
-.zcompcache
-.zkbd
-.zsh_sessions/
+# Zsh completion-optimization dumpfile
+*zcompdump*
+.zcompcache/
 
-.histfile
-.*_history
+# Zsh history
+.zsh_history
 
-*p10k.zsh
+# Zsh sessions
+.zsh_sessions
 
+# Zsh zcalc history
+.zcalc_history
+
+# A popular plugin manager's files
+._zinit
+.zinit_lstupd
+
+# zdharma/zshelldoc tool's files
+zsdoc/data
+
+# robbyrussell/oh-my-zsh/plugins/per-directory-history plugin's files
+# (when set-up to store the history in the local directory)
+.directory_history
+
+# MichaelAquilina/zsh-autoswitch-virtualenv plugin's files
+# (for Zsh plugins using Python)
+.venv
+
+# Zunit tests' output
+/tests/_output/*
+!/tests/_output/.gitkeep
+
+
+# Powerlevel10k
+p10k.zsh
+
+# Custom Configurations
 custom/

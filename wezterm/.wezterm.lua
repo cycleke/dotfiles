@@ -9,80 +9,52 @@ end
 local LIGHT_COLOR_SCHEME = "Ef-Deuteranopia-Light"
 local DARK_COLOR_SCHEME = "Ef-Deuteranopia-Dark"
 
-local fallback_fonts = {}
-
-if wezterm.target_triple:find("windows") then
-	config.default_prog = { "nu.exe", "--login" }
-	config.win32_system_backdrop = "Acrylic"
-
-	fallback_fonts = {
-		"Symbols Nerd Font",
-		"Noto Color Emoji",
-		"Noto Sans Symbols 2",
-		"Noto Sans Symbols",
-		"TH-Ming-P2",
-		"Noto Unicode",
-	}
-elseif wezterm.target_triple:find("darwin") then
-	config.default_prog = { "zsh", "--login" }
-	config.macos_window_background_blur = 16
-	config.native_macos_fullscreen_mode = true
-
-	fallback_fonts = {
-		"Symbols Nerd Font",
-		"Apple Symbols",
-		"Apple Color Emoji",
-		"Apple Symbols",
-		"TH-Ming-P2",
-		"Noto Unicode",
-	}
-elseif wezterm.target_triple:find("linux") then
-	config.default_prog = { "zsh", "--login" }
-
-	fallback_fonts = {
-		"Symbols Nerd Font",
-		"Noto Color Emoji",
-		"Noto Sans Symbols 2",
-		"Noto Sans Symbols",
-		"TH-Ming-P2",
-		"Noto Unicode",
-	}
-end
-
+local fallback_fonts = {
+	"Symbols Nerd Font",
+	"Noto Color Emoji",
+	"Noto Sans Symbols 2",
+	"Noto Sans Symbols",
+	"TH-Ming-P2",
+	"Noto Unicode",
+}
 local function fonts_with_fallback(fonts)
 	for _, font in ipairs(fallback_fonts) do
 		table.insert(fonts, font)
 	end
 	return wezterm.font_with_fallback(fonts)
 end
-local MONASPACE_ENABLE_FEATURES = {
-	"calt",
-	"ss01",
-	"ss02",
-	"ss03",
-	"ss04",
-	"ss07",
-	"liga",
-	"cv01=2",
-}
 
-local TERM_FONTS = fonts_with_fallback({
-	{
-		family = "Maple Mono NF CN",
-		harfbuzz_features = { "liga", "cv02" },
-	},
-})
+if wezterm.target_triple:find("darwin") then
+	config.default_prog = { "zsh", "--login" }
+	config.macos_window_background_blur = 16
+	config.native_macos_fullscreen_mode = true
+
+	fallback_fonts = {
+		"Symbols Nerd Font",
+		"Apple Color Emoji",
+		"Apple Symbols",
+		"TH-Ming-P2",
+		"Noto Unicode",
+	}
+elseif wezterm.target_triple:find("windows") then
+	config.default_prog = { "nu.exe", "--login" }
+	config.win32_system_backdrop = "Acrylic"
+elseif wezterm.target_triple:find("linux") then
+	config.default_prog = { "zsh", "--login" }
+end
+
+local TERM_FONTS = fonts_with_fallback({ "Maple Mono NF CN" })
 local CODE_FONTS = fonts_with_fallback({
 	{
 		family = "Monaspace Neon",
-		harfbuzz_features = MONASPACE_ENABLE_FEATURES,
+		harfbuzz_features = { "calt", "ss01", "ss02", "ss03", "ss04", "ss07", "liga", "cv01=2" },
 	},
 	"KingHwa_OldSong",
 })
 local HANDWRITING_FONTS = fonts_with_fallback({
 	{
 		family = "Monaspace Radon",
-		harfbuzz_features = MONASPACE_ENABLE_FEATURES,
+		harfbuzz_features = { "calt", "ss01", "ss02", "ss03", "ss04", "ss07", "liga", "cv01=2" },
 	},
 	"ToneOZ-Tsuipita-TC",
 })
@@ -98,10 +70,10 @@ local PROFILES = {
 				font = HANDWRITING_FONTS,
 			},
 		},
-		-- hide_tab_bar_if_only_one_tab = true,
 	},
 }
 
+-- Misc Configuration
 config.check_for_updates = false
 config.audible_bell = "Disabled"
 config.selection_word_boundary = " \t\n{}[]()<>\"'`"
@@ -113,31 +85,34 @@ config.font = TERM_FONTS
 config.font_size = 15
 config.adjust_window_size_when_changing_font_size = false
 
-config.window_background_opacity = 0.9
+config.window_background_opacity = 0.90
 config.text_background_opacity = 0.3
 
-config.window_padding = {
-	left = "0.5cell",
-	right = "0.3cell",
-	top = "0.3cell",
-	bottom = "0.3cell",
-}
+-- Window Configuration
 config.window_frame = {
-	font = wezterm.font({
-		family = "Monaspace Krypton",
-	}),
-	font_size = 12,
+	border_left_width = "0.25cell",
+	border_right_width = "0.25cell",
+	border_bottom_height = "0.15cell",
+	border_top_height = "0.15cell",
+	font = wezterm.font("Monaspace Krypton"),
+}
+config.window_padding = {
+	left = 20,
+	right = 20,
+	top = 20,
+	bottom = 20,
 }
 
+-- Tab Bar Configuration
 config.enable_tab_bar = true
 config.use_fancy_tab_bar = true
 config.hide_tab_bar_if_only_one_tab = false
 config.show_tab_index_in_tab_bar = true
 config.tab_bar_at_bottom = false
 config.switch_to_last_active_tab_when_closing_tab = false
-config.window_decorations = "INTEGRATED_BUTTONS | RESIZE"
+config.window_decorations = "RESIZE"
 
--- Keybindings
+-- Key Bindings
 config.disable_default_key_bindings = true
 config.keys = {
 	{ key = "q", mods = "SUPER", action = act.QuitApplication },
@@ -207,6 +182,7 @@ config.keys = {
 	{ key = "0", mods = "CTRL|SHIFT", action = act.ActivateTab(-1) },
 }
 
+-- Mouse Binding
 config.disable_default_mouse_bindings = true
 config.mouse_bindings = {
 	{
@@ -263,6 +239,12 @@ config.mouse_bindings = {
 		mods = "CTRL",
 		action = act.OpenLinkAtMouseCursor,
 	},
+	-- Super-click will open the link
+	{
+		event = { Up = { streak = 1, button = "Left" } },
+		mods = "SUPER",
+		action = act.OpenLinkAtMouseCursor,
+	},
 }
 
 local function scheme_for_appearance(appearance)
@@ -301,9 +283,7 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
 	local title_prefix = tostring(tab.tab_index + 1) .. "."
 
 	if tab.is_active then
-		-- Symbols: "🎸" "§ "
 		title_prefix = "§ "
-
 		background = NORD_COLOR_SCHEME.brights[1]
 		foreground = NORD_COLOR_SCHEME.brights[4]
 	elseif hover then
@@ -316,21 +296,10 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
 
 	if pane.domain_name then
 		local domain_suffix = pane.domain_name
-
-		if domain_suffix == "devcloud" then
-			domain_suffix = " ☁️"
-		elseif domain_suffix == "bastion" then
-			domain_suffix = " 🔗"
-		elseif domain_suffix == "local" then
-			domain_suffix = " 🖥️"
-		else
-			domain_suffix = " - (" .. domain_suffix .. ")"
-		end
-
 		if title_content and #title_content > 0 then
-			title_content = title_content .. domain_suffix
+			title_content = title_content .. " " .. domain_suffix
 		else
-			title_content = "∅" .. domain_suffix
+			title_content = "∅ " .. domain_suffix
 		end
 	end
 
@@ -339,29 +308,15 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
 	return {
 		{ Background = { Color = background } },
 		{ Foreground = { Color = foreground } },
-
 		{ Attribute = { Intensity = "Normal" } },
 		{ Text = title_prefix },
-
 		{ Attribute = { Intensity = "Bold" } },
 		{ Text = title_content },
-
 		{ Attribute = { Intensity = "Normal" } },
 	}
 end)
 
 wezterm.on("format-window-title", function(tab, pane, tabs, panes, config)
-	-- local status = ""
-	-- if tab.active_pane.is_zoomed then
-	-- 	status = status .. "Z,"
-	-- end
-
-	-- if #status > 0 then
-	-- 	status = "[" .. status:sub(1, -2) .. "]"
-	-- end
-
-	-- return title .. " " .. status
-
 	local pane = tab.active_pane
 	local title = pane.domain_name .. " - WezTerm"
 	local tab_title = tab.tab_title
@@ -429,30 +384,6 @@ wezterm.on("augment-command-palette", function(window, pane)
 		},
 	}
 end)
-
-wezterm.on("trigger-editor-profile", function(window, pane)
-	local old_overrides = window:get_config_overrides() or {}
-	local new_overrides = nil
-	if old_overrides.font == nil then
-		new_overrides = PROFILES["editor"]
-	else
-		new_overrides = PROFILES["default"]
-	end
-
-	new_overrides.color_scheme = old_overrides.color_scheme
-	window:set_config_overrides(new_overrides)
-end)
-
-table.insert(config.keys, {
-	key = "m",
-	mods = "CTRL|SHIFT",
-	action = act_rename_tab,
-})
-table.insert(config.keys, {
-	key = "?",
-	mods = "CTRL|SHIFT",
-	action = act.EmitEvent("trigger-editor-profile"),
-})
 
 -- Custom Begin
 -- Custom End

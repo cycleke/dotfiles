@@ -111,7 +111,6 @@ zinit wait lucid light-mode for \
     zdharma-continuum/fast-syntax-highlighting \
     blockf atpull"zinit creinstall -q ." \
     zsh-users/zsh-completions \
-    zsh-users/zsh-autosuggestions \
     Aloxaf/fzf-tab
 
 # Load powerlevel10k theme
