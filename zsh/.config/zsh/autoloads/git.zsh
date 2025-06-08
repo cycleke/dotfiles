@@ -95,6 +95,7 @@ alias gss="git status --short"
 alias gsta="git stash push"
 alias gstl="git stash list"
 alias gstp="git stash pop"
+alias gstd="git stash drop"
 
 alias gsw="git switch"
 alias gswc="git switch --create"
@@ -106,28 +107,24 @@ alias gclsfn="git clone --recurse-submodules --sparse --filter=blob:none"
 alias gclsfm="git clone --recurse-submodules --sparse --filter=blob:limit=1m"
 alias gsco="git sparse-checkout"
 
+alias glfs="git lfs"
+
 function g-shrink() {
-    git reflog expire --expire-unreachable=now --all
-    git fsck --full --unreachable
-    git repack -A -d
-    git gc --aggressive --prune=now
-    git lfs prune
-    git remote prune origin
+  git reflog expire --expire-unreachable=now --all
+  git fsck --full --unreachable
+  git repack -A -d
+  git gc --aggressive --prune=now
+  git lfs prune
+  git remote prune origin
 }
 
 # Pack the current HEAD.
 pack() {
-    cdir=$(basename $(pwd))
-    git archive --prefix=${cdir}-$(git rev-parse --short HEAD)/ -o ${cdir}.tar.gz HEAD
+  cdir=$(basename $(pwd))
+  git archive --prefix=${cdir}-$(git rev-parse --short HEAD)/ -o ${cdir}.tgz HEAD
 }
 
 packzip() {
-    cdir=$(basename $(pwd))
-    git archive -o ${cdir}.zip HEAD
-}
-
-packzst() {
-    cdir=$(basename $(pwd))
-    git config tar.tar.zst.command "zstd"
-    git archive --prefix=${cdir}-$(git rev-parse --short HEAD)/ -o ${cdir}.tar.zst HEAD
+  cdir=$(basename $(pwd))
+  git archive -o ${cdir}.zip HEAD
 }

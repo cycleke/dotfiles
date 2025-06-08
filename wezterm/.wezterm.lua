@@ -8,8 +8,7 @@ end
 
 local LIGHT_COLOR_SCHEME = "Ef-Deuteranopia-Light"
 local DARK_COLOR_SCHEME = "Ef-Deuteranopia-Dark"
-
-local fallback_fonts = {
+local DEFAULT_FALLBACK_FONTS = {
 	"Symbols Nerd Font",
 	"Noto Color Emoji",
 	"Noto Sans Symbols 2",
@@ -17,19 +16,12 @@ local fallback_fonts = {
 	"TH-Ming-P2",
 	"Noto Unicode",
 }
-local function fonts_with_fallback(fonts)
-	for _, font in ipairs(fallback_fonts) do
-		table.insert(fonts, font)
-	end
-	return wezterm.font_with_fallback(fonts)
-end
 
 if wezterm.target_triple:find("darwin") then
-	config.default_prog = { "zsh", "--login" }
 	config.macos_window_background_blur = 16
 	config.native_macos_fullscreen_mode = true
-
-	fallback_fonts = {
+	config.default_prog = { "zsh", "--login" }
+	DEFAULT_FALLBACK_FONTS = {
 		"Symbols Nerd Font",
 		"Apple Color Emoji",
 		"Apple Symbols",
@@ -43,65 +35,81 @@ elseif wezterm.target_triple:find("linux") then
 	config.default_prog = { "zsh", "--login" }
 end
 
-local TERM_FONTS = fonts_with_fallback({ "Maple Mono NF CN" })
-local CODE_FONTS = fonts_with_fallback({
-	{
-		family = "Monaspace Neon",
-		harfbuzz_features = { "calt", "ss01", "ss02", "ss03", "ss04", "ss07", "liga", "cv01=2" },
-	},
-	"KingHwa_OldSong",
-})
-local HANDWRITING_FONTS = fonts_with_fallback({
-	{
-		family = "Monaspace Radon",
-		harfbuzz_features = { "calt", "ss01", "ss02", "ss03", "ss04", "ss07", "liga", "cv01=2" },
-	},
-	"ToneOZ-Tsuipita-TC",
+local function scheme_for_appearance(appearance)
+	if appearance:find("Dark") then
+		return DARK_COLOR_SCHEME
+	else
+		return LIGHT_COLOR_SCHEME
+	end
+end
+
+local function font_with_fallback(...)
+	local fonts = { ... }
+	table.move(DEFAULT_FALLBACK_FONTS, 1, #DEFAULT_FALLBACK_FONTS, #fonts + 1, fonts)
+	return wezterm.font_with_fallback(fonts)
+end
+
+config.font = font_with_fallback({
+	family = "Maple Mono NF CN",
+	harfbuzz_features = { "liga", "calt", "cv02" },
 })
 
 local PROFILES = {
 	default = {},
 	editor = {
-		font = CODE_FONTS,
-		font_size = 14,
+		font = font_with_fallback({
+			family = "Monaspace Neon",
+			harfbuzz_features = { "calt", "ss01", "ss02", "ss03", "ss04", "ss07", "liga", "cv01=2" },
+		}, "YShiMincho CL"),
 		font_rules = {
 			{
 				italic = true,
-				font = HANDWRITING_FONTS,
+				font = font_with_fallback({
+					family = "Monaspace Radon",
+					harfbuzz_features = { "calt", "ss01", "ss02", "ss03", "ss04", "ss07", "liga", "cv01=2" },
+				}, "YShiPen-ShutiCL"),
 			},
 		},
+
+		window_padding = { left = "3px", right = "3px", top = "0px", bottom = "5px" },
 	},
 }
 
 -- Misc Configuration
 config.check_for_updates = false
 config.audible_bell = "Disabled"
-config.selection_word_boundary = " \t\n{}[]()<>\"'`"
 
-config.color_scheme = LIGHT_COLOR_SCHEME
 config.default_cursor_style = "SteadyBlock"
+config.color_scheme = scheme_for_appearance("")
 
-config.font = TERM_FONTS
-config.font_size = 15
-config.adjust_window_size_when_changing_font_size = false
-
-config.window_background_opacity = 0.90
 config.text_background_opacity = 0.3
+config.window_background_opacity = 0.9
+config.adjust_window_size_when_changing_font_size = false
 
 -- Window Configuration
 config.window_frame = {
-	border_left_width = "0.25cell",
-	border_right_width = "0.25cell",
-	border_bottom_height = "0.15cell",
-	border_top_height = "0.15cell",
+	active_titlebar_bg = "#0F2536",
+	inactive_titlebar_bg = "#0F2536",
 	font = wezterm.font("Monaspace Krypton"),
+
+	border_left_width = "2px",
+	border_right_width = "2px",
+	border_bottom_height = "2px",
+	border_top_height = "2px",
+
+	border_left_color = "#333",
+	border_right_color = "#333",
+	border_bottom_color = "#333",
+	border_top_color = "#333",
 }
 config.window_padding = {
-	left = 20,
-	right = 20,
-	top = 20,
-	bottom = 20,
+	left = "0.5cell",
+	right = "0cell",
+	top = "0.5cell",
+	bottom = "0cell",
 }
+config.initial_rows = 25
+config.initial_cols = 100
 
 -- Tab Bar Configuration
 config.enable_tab_bar = true
@@ -126,11 +134,12 @@ config.keys = {
 	{ key = "c", mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard") },
 	{ key = "v", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") },
 
+	{ key = "n", mods = "ALT", action = act.SpawnWindow },
 	{ key = "n", mods = "SUPER", action = act.SpawnWindow },
-	{ key = "n", mods = "CTRL|SHIFT", action = act.SpawnWindow },
 
-	{ key = "n", mods = "ALT", action = act.ShowLauncher },
+	{ key = "n", mods = "CTRL|SHIFT|ALT", action = act.ShowLauncher },
 
+	{ key = "t", mods = "ALT", action = act.SpawnTab("CurrentPaneDomain") },
 	{ key = "t", mods = "SUPER", action = act.SpawnTab("CurrentPaneDomain") },
 	{ key = "t", mods = "CTRL|SHIFT", action = act.SpawnTab("CurrentPaneDomain") },
 
@@ -159,6 +168,17 @@ config.keys = {
 	{ key = "{", mods = "CTRL|SHIFT", action = act.MoveTabRelative(-1) },
 	{ key = "}", mods = "CTRL|SHIFT", action = act.MoveTabRelative(1) },
 
+	{ key = "1", mods = "ALT", action = act.ActivateTab(0) },
+	{ key = "2", mods = "ALT", action = act.ActivateTab(1) },
+	{ key = "3", mods = "ALT", action = act.ActivateTab(2) },
+	{ key = "4", mods = "ALT", action = act.ActivateTab(3) },
+	{ key = "5", mods = "ALT", action = act.ActivateTab(4) },
+	{ key = "6", mods = "ALT", action = act.ActivateTab(5) },
+	{ key = "7", mods = "ALT", action = act.ActivateTab(6) },
+	{ key = "8", mods = "ALT", action = act.ActivateTab(7) },
+	{ key = "9", mods = "ALT", action = act.ActivateTab(8) },
+	{ key = "0", mods = "ALT", action = act.ActivateTab(-1) },
+
 	{ key = "1", mods = "SUPER", action = act.ActivateTab(0) },
 	{ key = "2", mods = "SUPER", action = act.ActivateTab(1) },
 	{ key = "3", mods = "SUPER", action = act.ActivateTab(2) },
@@ -169,17 +189,6 @@ config.keys = {
 	{ key = "8", mods = "SUPER", action = act.ActivateTab(7) },
 	{ key = "9", mods = "SUPER", action = act.ActivateTab(8) },
 	{ key = "0", mods = "SUPER", action = act.ActivateTab(-1) },
-
-	{ key = "1", mods = "CTRL|SHIFT", action = act.ActivateTab(0) },
-	{ key = "2", mods = "CTRL|SHIFT", action = act.ActivateTab(1) },
-	{ key = "3", mods = "CTRL|SHIFT", action = act.ActivateTab(2) },
-	{ key = "4", mods = "CTRL|SHIFT", action = act.ActivateTab(3) },
-	{ key = "5", mods = "CTRL|SHIFT", action = act.ActivateTab(4) },
-	{ key = "6", mods = "CTRL|SHIFT", action = act.ActivateTab(5) },
-	{ key = "7", mods = "CTRL|SHIFT", action = act.ActivateTab(6) },
-	{ key = "8", mods = "CTRL|SHIFT", action = act.ActivateTab(7) },
-	{ key = "9", mods = "CTRL|SHIFT", action = act.ActivateTab(8) },
-	{ key = "0", mods = "CTRL|SHIFT", action = act.ActivateTab(-1) },
 }
 
 -- Mouse Binding
@@ -222,6 +231,7 @@ config.mouse_bindings = {
 		mods = "NONE",
 		action = act.ExtendSelectionToMouseCursor("Cell"),
 	},
+
 	-- Turn on the mouse wheel to scroll the screen
 	{
 		event = { Down = { streak = 1, button = { WheelUp = 1 } } },
@@ -233,27 +243,19 @@ config.mouse_bindings = {
 		mods = "NONE",
 		action = act.ScrollByCurrentEventWheelDelta,
 	},
-	-- Ctrl-click will open the link
+
+	-- Ctrl/Super-click will open the link
 	{
 		event = { Up = { streak = 1, button = "Left" } },
 		mods = "CTRL",
 		action = act.OpenLinkAtMouseCursor,
 	},
-	-- Super-click will open the link
 	{
 		event = { Up = { streak = 1, button = "Left" } },
 		mods = "SUPER",
 		action = act.OpenLinkAtMouseCursor,
 	},
 }
-
-local function scheme_for_appearance(appearance)
-	if appearance:find("Dark") then
-		return DARK_COLOR_SCHEME
-	else
-		return LIGHT_COLOR_SCHEME
-	end
-end
 
 wezterm.on("window-config-reloaded", function(window, pane)
 	local overrides = window:get_config_overrides() or {}
@@ -294,16 +296,18 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
 	local title_content = tab_title(tab)
 	local pane = tab.active_pane
 
+	title_content = wezterm.truncate_right(title_content, max_width)
+
 	if pane.domain_name then
 		local domain_suffix = pane.domain_name
+		domain_suffix = " - (" .. domain_suffix .. ")"
+
 		if title_content and #title_content > 0 then
 			title_content = title_content .. " " .. domain_suffix
 		else
 			title_content = "∅ " .. domain_suffix
 		end
 	end
-
-	title_content = wezterm.truncate_right(title_content, max_width)
 
 	return {
 		{ Background = { Color = background } },
@@ -327,20 +331,16 @@ wezterm.on("format-window-title", function(tab, pane, tabs, panes, config)
 	return title
 end)
 
-local act_change_profile_choices = {}
-for key, _ in pairs(PROFILES) do
-	table.insert(act_change_profile_choices, { label = key })
+local function build_profile_choices()
+	local choices = {}
+	for key, _ in pairs(PROFILES) do
+		table.insert(choices, { label = key })
+	end
+	return choices
 end
 
 local act_change_profile = act.InputSelector({
-	title = wezterm.format({
-		{ Attribute = { Intensity = "Bold" } },
-		{ Foreground = { AnsiColor = "Fuchsia" } },
-		{ Text = "Change Window Profile." },
-	}),
-
-	choices = act_change_profile_choices,
-
+	choices = build_profile_choices(),
 	action = wezterm.action_callback(function(window, pane, id, label)
 		if not id and not label then
 			wezterm.log_info("Profile change cancelled")
